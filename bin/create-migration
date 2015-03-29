@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+mkdir -p migrations
+
+NOW=$(date +"%Y%m%d%H%M%S")
+touch migrations/$NOW-$1.up.sql
+touch migrations/$NOW-$1.down.sql
