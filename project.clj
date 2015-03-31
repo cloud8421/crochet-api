@@ -6,7 +6,8 @@
   :plugins [[lein-ring "0.9.2"]
             [lein-environ "1.0.0"]
             [ragtime/ragtime.lein "0.3.8"]]
-  :ring {:handler crochet-api.core/handler}
+  :ring {:handler crochet-api.core/handler
+         :nrepl {:start? true :port 12345}}
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.postgresql/postgresql "9.3-1102-jdbc41"]
                  [environ "1.0.0"]
@@ -15,6 +16,7 @@
                  [cheshire "5.4.0"]
                  [liberator "0.12.2"]
                  [compojure "1.3.2"]
+                 [clj-http "1.1.0"]
                  [log4j/log4j "1.2.16" :exclusions [javax.mail/mail
                                                     javax.jms/jms
                                                     com.sun.jdmk/jmxtools
