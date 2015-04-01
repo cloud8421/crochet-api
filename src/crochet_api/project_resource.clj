@@ -7,9 +7,15 @@
 
 (def default-limit 50)
 
+(defn to-insertable [json]
+  (-> (keywordize-keys json)
+      (update-in [:layouts] #(generate-string %))))
+
 (defn update-project [project data]
   (let [uuid {:uuid (str (:uuid project))}
-        params (merge (keywordize-keys data) {:uuid (:uuid project)})]
+        params (merge
+                 {:uuid (:uuid project)}
+                 (to-insertable data))]
     (project/update! params)))
 
 (defresource projects []
@@ -29,5 +35,6 @@
   :existed? (fn [_] (empty? (project/find-by-uuid {:uuid uuid} ::sentinel)))
   :new? (fn [_] (empty? (project/find-by-uuid {:uuid uuid} ::sentinel)))
   :can-post-to-missing? false
-  :put! (fn [ctx] (update-project (::project ctx) (::data ctx)))
+  :put! #(update-project (::project %) (::data %))
   :handle-ok ::project)
+
