@@ -7,7 +7,8 @@
 
 (defroutes app
   (ANY "/" [] "hello")
-  (GET "/projects" [] (project-resource/projects)))
+  (GET "/projects" [] (project-resource/projects))
+  (ANY ["/projects/:uuid"] [uuid] (project-resource/project uuid)))
 
 (def handler
   (-> app
