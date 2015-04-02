@@ -21,9 +21,14 @@ VALUES (
 );
 
 -- name: update!
--- Updates a project by name
+-- Updates a project by uuid
 UPDATE projects
 SET name = :name,
     layouts = :layouts::jsonb,
     updated_at = now()
+WHERE uuid = :uuid::uuid;
+
+-- name: delete!
+-- Delete a project by uuid
+DELETE FROM projects
 WHERE uuid = :uuid::uuid;

@@ -21,6 +21,10 @@
                  (to-insertable data))]
     (project/update! params)))
 
+(defn delete-project [project]
+  (let [uuid {:uuid (str (:uuid project))}]
+    (project/delete! uuid)))
+
 (defresource projects []
   :available-media-types ["application/json"]
   :allowed-methods [:get :post]
@@ -41,4 +45,5 @@
   :new? (fn [_] (empty? (project/find-by-uuid {:uuid uuid} ::sentinel)))
   :can-put-to-missing? false
   :put! #(update-project (::project %) (::data %))
+  :delete! #(delete-project (::project %))
   :handle-ok ::project)
