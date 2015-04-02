@@ -11,6 +11,9 @@
   (-> (keywordize-keys json)
       (update-in [:layouts] #(generate-string %))))
 
+(defn create-project [data]
+  (project/create! (to-insertable data)))
+
 (defn update-project [project data]
   (let [uuid {:uuid (str (:uuid project))}
         params (merge
@@ -20,8 +23,10 @@
 
 (defresource projects []
   :available-media-types ["application/json"]
+  :allowed-methods [:get :post]
   :known-content-type? #(check-content-type % ["application/json"])
-  :allowed-methods [:get]
+  :malformed? #(parse-json % ::data)
+  :post! #(create-project (::data %))
   :handle-ok (fn [_] (project/all {:limit default-limit})))
 
 (defresource project [uuid]
@@ -37,4 +42,3 @@
   :can-post-to-missing? false
   :put! #(update-project (::project %) (::data %))
   :handle-ok ::project)
-
