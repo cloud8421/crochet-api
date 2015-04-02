@@ -39,6 +39,6 @@
                 {::project (first pj)})))
   :existed? (fn [_] (empty? (project/find-by-uuid {:uuid uuid} ::sentinel)))
   :new? (fn [_] (empty? (project/find-by-uuid {:uuid uuid} ::sentinel)))
-  :can-post-to-missing? false
+  :can-put-to-missing? false
   :put! #(update-project (::project %) (::data %))
   :handle-ok ::project)
