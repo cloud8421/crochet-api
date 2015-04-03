@@ -5,6 +5,11 @@ FROM projects
 ORDER BY created_at ASC
 LIMIT :limit;
 
+-- name: project-count
+-- Counts all projects
+SELECT count(*)
+FROM projects;
+
 -- name: find-by-uuid
 -- Finds a project by uuid
 SELECT *
