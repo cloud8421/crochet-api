@@ -11,8 +11,9 @@
   (-> (keywordize-keys json)
       (update-in [:layouts] #(generate-string %))))
 
-(defn create-project [data]
-  (project/create! (to-insertable data)))
+(defn create-project [facebook-id data]
+  (.println System/out facebook-id)
+  (project/create! (merge {:facebook_id facebook-id} (to-insertable data))))
 
 (defn update-project [project data]
   (let [uuid {:uuid (str (:uuid project))}
@@ -25,13 +26,14 @@
   (let [uuid {:uuid (str (:uuid project))}]
     (project/delete! uuid)))
 
-(defresource projects []
+(defresource projects [facebook-id]
   :available-media-types ["application/json"]
   :allowed-methods [:get :post]
   :known-content-type? #(check-content-type % ["application/json"])
   :malformed? #(parse-json % ::data)
-  :post! #(create-project (::data %))
-  :handle-ok (fn [_] (project/all {:limit default-limit})))
+  :post! #(create-project facebook-id (::data %))
+  :handle-ok (fn [_] (project/by-user {:facebook_id facebook-id
+                                       :limit default-limit})))
 
 (defresource project [uuid]
   :available-media-types ["application/json"]

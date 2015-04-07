@@ -3,12 +3,13 @@
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.logger :refer [wrap-with-logger]]
             [ring.middleware.cors :refer [wrap-cors]]
-            [compojure.core :refer [defroutes ANY GET POST]]))
+            [compojure.core :refer [defroutes context ANY GET POST]]))
 
 (defroutes app
   (ANY "/" [] "hello")
-  (ANY "/projects" [] (project-resource/projects))
-  (ANY ["/projects/:uuid"] [uuid] (project-resource/project uuid)))
+  (ANY ["/projects/:uuid"] [uuid] (project-resource/project uuid))
+  (context "/:facebook-id" [facebook-id]
+           (ANY "/projects" [] (project-resource/projects facebook-id))))
 
 (def handler
   (-> app
