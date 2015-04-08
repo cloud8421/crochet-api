@@ -10,10 +10,11 @@
   jdbc/IResultSetReadColumn
   (result-set-read-column [val rsmeta idx]
     (let [colType (.getColumnTypeName rsmeta idx)]
-    (if (or (= colType "json")
-            (= colType "jsonb"))
+    (if (contains? #{"json" "jsonb"} colType)
       (cheshire/parse-string (.getValue val) true)
       val))))
+
+(contains? #{"json" "jsonb"} "foo")
 
 ;; Support for Timestamps
 (extend-type java.sql.Timestamp
